@@ -1,5 +1,9 @@
 <?php
 
+if (!function_exists('env')) {
+    require_once __DIR__ . '/env.php';
+}
+
 /**
  * Search configuration for Algolia Index.
  *
@@ -13,20 +17,38 @@
 /**
  * Search index provider configuration
  */
-define('SEARCH_INDEX_PROVIDER', '(#optional:SEARCH_INDEX_PROVIDER#)');
+if (($searchIndexProvider = env('SEARCH_INDEX_PROVIDER', null)) !== null) {
+    define('SEARCH_INDEX_PROVIDER', $searchIndexProvider);
+}
 
 /**
  * Typesense configuration
  */
-define('SEARCH_INDEX_TYPESENSE_API_URL', '(#optional:SEARCH_INDEX_TYPESENSE_API_URL#)');
-define('SEARCH_INDEX_TYPESENSE_API_KEY', '(#optional:SEARCH_INDEX_TYPESENSE_API_KEY#)');
-define('SEARCH_INDEX_TYPESENSE_PUBLIC_API_KEY', '(#optional:SEARCH_INDEX_TYPESENSE_PUBLIC_API_KEY#)');
-define('SEARCH_INDEX_TYPESENSE_COLLECTION_NAME', '(#optional:SEARCH_INDEX_TYPESENSE_COLLECTION_NAME#)');
+if (($typesenseUrl = env('SEARCH_INDEX_TYPESENSE_API_URL', null)) !== null) {
+    define('SEARCH_INDEX_TYPESENSE_API_URL', $typesenseUrl);
+}
+if (($typesenseKey = env('SEARCH_INDEX_TYPESENSE_API_KEY', null)) !== null) {
+    define('SEARCH_INDEX_TYPESENSE_API_KEY', $typesenseKey);
+}
+if (($typesensePubKey = env('SEARCH_INDEX_TYPESENSE_PUBLIC_API_KEY', null)) !== null) {
+    define('SEARCH_INDEX_TYPESENSE_PUBLIC_API_KEY', $typesensePubKey);
+}
+if (($typesenseColName = env('SEARCH_INDEX_TYPESENSE_COLLECTION_NAME', null)) !== null) {
+    define('SEARCH_INDEX_TYPESENSE_COLLECTION_NAME', $typesenseColName);
+}
 
 /**
  * Algolia configuration
  */
-define('SEARCH_INDEX_ALGOLIA_APPLICATION_ID', '(#optional:SEARCH_INDEX_ALGOLIA_APPLICATION_ID#)');
-define('SEARCH_INDEX_ALGOLIA_API_KEY', '(#optional:SEARCH_INDEX_ALGOLIA_API_KEY#)');
-define('SEARCH_INDEX_ALGOLIA_PUBLIC_API_KEY', '(#optional:SEARCH_INDEX_ALGOLIA_PUBLIC_API_KEY#)');
-define('SEARCH_INDEX_ALGOLIA_INDEX_NAME', '(#optional:SEARCH_INDEX_ALGOLIA_INDEX_NAME#)');
+if (($algoliaAppId = env('SEARCH_INDEX_ALGOLIA_APPLICATION_ID', null)) !== null) {
+    define('SEARCH_INDEX_ALGOLIA_APPLICATION_ID', $algoliaAppId);
+}
+if (($algoliaApiKey = env('SEARCH_INDEX_ALGOLIA_API_KEY', null)) !== null) {
+    define('SEARCH_INDEX_ALGOLIA_API_KEY', $algoliaApiKey);
+}
+if (($algoliaPubKey = env('SEARCH_INDEX_ALGOLIA_PUBLIC_API_KEY', null)) !== null) {
+    define('SEARCH_INDEX_ALGOLIA_PUBLIC_API_KEY', $algoliaPubKey);
+}
+if (($algoliaIndexName = env('SEARCH_INDEX_ALGOLIA_INDEX_NAME', null)) !== null) {
+    define('SEARCH_INDEX_ALGOLIA_INDEX_NAME', $algoliaIndexName);
+}

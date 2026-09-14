@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Bootstraps WordPress against an empty database, respecting the same
 # WP_ALLOW_MULTISITE / SUBDOMAIN_INSTALL environment variables used by
-# setup-config.sh and setup-htaccess.sh. This is a no-op once WordPress
+# setup-htaccess.sh and wp-config. This is a no-op once WordPress
 # has already been installed, so it is safe to run on every container start.
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -24,14 +24,22 @@ until wp db check --allow-root; do
     sleep 2
 done
 
-: "${DOMAIN_CURRENT_SITE:?DOMAIN_CURRENT_SITE must be set to install WordPress}"
-: "${WP_ADMIN_USER:?WP_ADMIN_USER must be set to install WordPress}"
-: "${WP_ADMIN_PASSWORD:?WP_ADMIN_PASSWORD must be set to install WordPress}"
-: "${WP_ADMIN_EMAIL:?WP_ADMIN_EMAIL must be set to install WordPress}"
+DOMAIN_CURRENT_SITE="${WP_CONF_DOMAIN_CURRENT_SITE:-${DOMAIN_CURRENT_SITE:-}}"
+WP_ADMIN_USER="${WP_CONF_WP_ADMIN_USER:-${WP_ADMIN_USER:-}}"
+WP_ADMIN_PASSWORD="${WP_CONF_WP_ADMIN_PASSWORD:-${WP_ADMIN_PASSWORD:-}}"
+WP_ADMIN_EMAIL="${WP_CONF_WP_ADMIN_EMAIL:-${WP_ADMIN_EMAIL:-}}"
+WP_SITE_TITLE="${WP_CONF_WP_SITE_TITLE:-${WP_SITE_TITLE:-WordPress}}"
+ALLOW_MULTISITE="${WP_CONF_WP_ALLOW_MULTISITE:-${WP_ALLOW_MULTISITE:-false}}"
+SUBDOMAIN="${WP_CONF_SUBDOMAIN_INSTALL:-${SUBDOMAIN_INSTALL:-false}}"
+
+: "${DOMAIN_CURRENT_SITE:?DOMAIN_CURRENT_SITE (or WP_CONF_DOMAIN_CURRENT_SITE) must be set to install WordPress}"
+: "${WP_ADMIN_USER:?WP_ADMIN_USER (or WP_CONF_WP_ADMIN_USER) must be set to install WordPress}"
+: "${WP_ADMIN_PASSWORD:?WP_ADMIN_PASSWORD (or WP_CONF_WP_ADMIN_PASSWORD) must be set to install WordPress}"
+: "${WP_ADMIN_EMAIL:?WP_ADMIN_EMAIL (or WP_CONF_WP_ADMIN_EMAIL) must be set to install WordPress}"
 
 INSTALL_ARGS=(
     --url="${DOMAIN_CURRENT_SITE}"
-    --title="${WP_SITE_TITLE:-WordPress}"
+    --title="${WP_SITE_TITLE}"
     --admin_user="${WP_ADMIN_USER}"
     --admin_password="${WP_ADMIN_PASSWORD}"
     --admin_email="${WP_ADMIN_EMAIL}"
@@ -39,8 +47,8 @@ INSTALL_ARGS=(
     --allow-root
 )
 
-if [[ "${WP_ALLOW_MULTISITE:-false}" == "true" ]]; then
-    if [[ "${SUBDOMAIN_INSTALL:-false}" == "true" ]]; then
+if [[ "${ALLOW_MULTISITE}" == "true" ]]; then
+    if [[ "${SUBDOMAIN}" == "true" ]]; then
         INSTALL_ARGS+=(--subdomains)
     fi
     # Installs core, creates the network row in wp_site, and registers the

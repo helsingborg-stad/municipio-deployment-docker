@@ -1,5 +1,9 @@
 <?php 
 
+if (!function_exists('env')) {
+    require_once __DIR__ . '/env.php';
+}
+
 /**
  * WordPress memory limit. This setting should be as
  * low as possible to enshure that site runs smoothly.
@@ -10,4 +14,6 @@
  *
  */
 
-define('WP_MEMORY_LIMIT', "(#WP_MEMORY_LIMIT|512M#)");
+if (!defined('WP_MEMORY_LIMIT')) {
+    define('WP_MEMORY_LIMIT', env('WP_MEMORY_LIMIT', '512M'));
+}

@@ -7,23 +7,24 @@ services:
         - ACF_PRO_KEY=b3JkZXJfaWQ9ODE2NDZ8dHlwZT1kZXZlbG9wZXJ8ZGF0ZT0yMDE2LTA1LTE2IDExOjEyOjQ4
         - MUNICIPIO_DEPLOYMENT_REF=dockerization
     environment:
-      DB_NAME: municipio
-      DB_USER: municipio
-      DB_PASSWORD: municipio
-      DB_HOST: db
-      WP_SITEURL: http://localhost:9090/wp
-      WP_HOME: http://localhost:9090
-      DB_TABLE_PREFIX: mun_
-      WP_ALLOW_MULTISITE: true
-      SUBDOMAIN_INSTALL: true
-      DOMAIN_CURRENT_SITE: localhost:9090
-      WP_SITE_TITLE: Municipio
-      WP_ADMIN_USER: admin
-      WP_ADMIN_PASSWORD: admin
-      WP_ADMIN_EMAIL: admin@example.com
-      WP_REDIS_DISABLED: true
-      REDIS_HOST: redis
-      FORCE_SSL_ADMIN: false
+      WP_CONF_DB_NAME: municipio
+      WP_CONF_DB_USER: municipio
+      WP_CONF_DB_PASSWORD: municipio
+      WP_CONF_DB_HOST: db
+      WP_CONF_WP_SITEURL: http://localhost:9090/wp
+      WP_CONF_WP_HOME: http://localhost:9090
+      WP_CONF_DB_TABLE_PREFIX: mun_
+      WP_CONF_WP_ALLOW_MULTISITE: true
+      WP_CONF_SUBDOMAIN_INSTALL: true
+      WP_CONF_DOMAIN_CURRENT_SITE: localhost:9090
+      WP_CONF_WP_SITE_TITLE: Municipio
+      WP_CONF_WP_ADMIN_USER: admin
+      WP_CONF_WP_ADMIN_PASSWORD: admin
+      WP_CONF_WP_ADMIN_EMAIL: admin@example.com
+      WP_CONF_WP_REDIS_DISABLED: true
+      WP_CONF_REDIS_HOST: redis
+      WP_CONF_FORCE_SSL_ADMIN: false
+      WP_CONF_EXTRA_MY_CUSTOM_FEATURE: active
 
     depends_on:
       - db

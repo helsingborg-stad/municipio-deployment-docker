@@ -1,7 +1,13 @@
 <?php
 
+if (!function_exists('env')) {
+    require_once __DIR__ . '/env.php';
+}
+
 /**
- * Turn of admin panel for ACF.
+ * Turn off admin panel for ACF.
  * @var bool
  */
- define('ACF_LITE', "(#ACF_LITE|true#)");
+if (!defined('ACF_LITE')) {
+    define('ACF_LITE', env('ACF_LITE', true));
+}

@@ -16,8 +16,11 @@ cd "$SCRIPT_DIR/.."
 # So if WP_ALLOW_MULTISITE is true and SUBDOMAIN_INSTALL is true use .htaccess-multisite-subdomain
 # If WP_ALLOW_MULTISITE is true and SUBDOMAIN_INSTALL is false use .htaccess-multisite-subfolder
 # Otherwise use .htaccess
-if [[ "${WP_ALLOW_MULTISITE:-false}" == "true" ]]; then
-    if [[ "${SUBDOMAIN_INSTALL:-false}" == "true" ]]; then
+ALLOW_MULTISITE="${WP_CONF_WP_ALLOW_MULTISITE:-${WP_ALLOW_MULTISITE:-false}}"
+SUBDOMAIN="${WP_CONF_SUBDOMAIN_INSTALL:-${SUBDOMAIN_INSTALL:-false}}"
+
+if [[ "$ALLOW_MULTISITE" == "true" ]]; then
+    if [[ "$SUBDOMAIN" == "true" ]]; then
         SELECTED_HTACCESS="htaccess/.htaccess-multisite-subdomain"
     else
         SELECTED_HTACCESS="htaccess/.htaccess-multisite-subfolder"

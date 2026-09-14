@@ -1,5 +1,9 @@
 <?php
 
+if (!function_exists('env')) {
+    require_once __DIR__ . '/env.php';
+}
+
 /**
  * Disable wp-cron
  *
@@ -11,4 +15,6 @@
  *
  * @var bool
  */
-define('DISABLE_WP_CRON', "(#DISABLE_WP_CRON|true#)");
+if (!defined('DISABLE_WP_CRON')) {
+    define('DISABLE_WP_CRON', env('DISABLE_WP_CRON', true));
+}

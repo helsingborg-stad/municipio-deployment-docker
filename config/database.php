@@ -1,24 +1,40 @@
 <?php
 
+if (!function_exists('env')) {
+    require_once __DIR__ . '/env.php';
+}
+
 // ** MySQL settings - You can get this info from your web host ** //
 
 /** The name of the database for WordPress */
-define('DB_NAME', '(#DB_NAME#)');
+if (!defined('DB_NAME')) {
+    define('DB_NAME', env('DB_NAME', 'municipio'));
+}
 
 /** MySQL database username */
-define('DB_USER', '(#DB_USER#)');
+if (!defined('DB_USER')) {
+    define('DB_USER', env('DB_USER', 'municipio'));
+}
 
 /** MySQL database password */
-define('DB_PASSWORD', '(#DB_PASSWORD#)');
+if (!defined('DB_PASSWORD')) {
+    define('DB_PASSWORD', env('DB_PASSWORD', 'municipio'));
+}
 
 /** MySQL hostname */
-define('DB_HOST', "(#DB_HOST#)");
+if (!defined('DB_HOST')) {
+    define('DB_HOST', env('DB_HOST', 'localhost'));
+}
 
 /** Database Charset to use in creating database tables. */
-define('DB_CHARSET', "(#DB_CHARSET|utf8mb4#)");
+if (!defined('DB_CHARSET')) {
+    define('DB_CHARSET', env('DB_CHARSET', 'utf8mb4'));
+}
 
 /** The Database Collate type. Don't change this if in doubt. */
-define('DB_COLLATE', "(#DB_COLLATE|utf8_general_ci#)");
+if (!defined('DB_COLLATE')) {
+    define('DB_COLLATE', env('DB_COLLATE', 'utf8_general_ci'));
+}
 
 /**
  * WordPress Database Table prefix.
@@ -26,4 +42,4 @@ define('DB_COLLATE', "(#DB_COLLATE|utf8_general_ci#)");
  * You can have multiple installations in one database if you give each
  * a unique prefix. Only numbers, letters, and underscores please!
  */
-$table_prefix  = '(#DB_TABLE_PREFIX#)'; //Should not be wp_ for improved security.
+$table_prefix  = env('DB_TABLE_PREFIX', 'wp_'); //Should not be wp_ for improved security.

@@ -1,12 +1,27 @@
 <?php 
 
+if (!function_exists('env')) {
+    require_once __DIR__ . '/env.php';
+}
 
 /**
  * Active Directory integration configuration.
  */
-define('AD_INTEGRATION_URL', '(#optional:AD_INTEGRATION_URL#)');
-define('AD_UPDATE_NAME', '(#optional:AD_UPDATE_NAME#)');
-define('AD_UPDATE_EMAIL', '(#optional:AD_UPDATE_EMAIL#)');
-define('AD_SAVE_PASSWORD', '(#optional:AD_SAVE_PASSWORD#)');
-define('AD_RANDOM_PASSWORD', '(#optional:AD_RANDOM_PASSWORD#)');
-define('AD_USER_DOMAIN', '(#optional:AD_USER_DOMAIN#)'); //What you email's are ending with
+if (($adIntegrationUrl = env('AD_INTEGRATION_URL', null)) !== null) {
+    define('AD_INTEGRATION_URL', $adIntegrationUrl);
+}
+if (($adUpdateName = env('AD_UPDATE_NAME', null)) !== null) {
+    define('AD_UPDATE_NAME', $adUpdateName);
+}
+if (($adUpdateEmail = env('AD_UPDATE_EMAIL', null)) !== null) {
+    define('AD_UPDATE_EMAIL', $adUpdateEmail);
+}
+if (($adSavePassword = env('AD_SAVE_PASSWORD', null)) !== null) {
+    define('AD_SAVE_PASSWORD', $adSavePassword);
+}
+if (($adRandomPassword = env('AD_RANDOM_PASSWORD', null)) !== null) {
+    define('AD_RANDOM_PASSWORD', $adRandomPassword);
+}
+if (($adUserDomain = env('AD_USER_DOMAIN', null)) !== null) {
+    define('AD_USER_DOMAIN', $adUserDomain); // What your emails are ending with
+}

@@ -1,5 +1,9 @@
 <?php
 
+if (!function_exists('env')) {
+    require_once __DIR__ . '/env.php';
+}
+
 /**
  * For developers: WordPress debugging mode.
  *
@@ -13,12 +17,19 @@
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
 
-define('WP_DEBUG', "(#optional:WP_DEBUG#)");
-
-// Activate debug mode on all environments using ?debug flag.
-if(isset($_GET['debug'])) {
-  define('WP_DEBUG', true);
+if (($wpDebug = env('WP_DEBUG', null)) !== null) {
+    define('WP_DEBUG', (bool) $wpDebug);
 }
 
-define('WP_SITEURL', '(#WP_SITEURL#)');
-define('WP_HOME', '(#WP_HOME#)');
+// Activate debug mode on all environments using ?debug flag.
+if (isset($_GET['debug']) && !defined('WP_DEBUG')) {
+    define('WP_DEBUG', true);
+}
+
+if (($wpSiteUrl = env('WP_SITEURL', null)) !== null) {
+    define('WP_SITEURL', $wpSiteUrl);
+}
+
+if (($wpHome = env('WP_HOME', null)) !== null) {
+    define('WP_HOME', $wpHome);
+}
