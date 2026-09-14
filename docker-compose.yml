@@ -13,16 +13,17 @@ services:
       DB_HOST: db
       WP_SITEURL: http://localhost:9090/wp
       WP_HOME: http://localhost:9090
-      DB_CHARSET: utf8mb4
       DB_TABLE_PREFIX: mun_
       WP_ALLOW_MULTISITE: true
-      SUBDOMAIN_INSTALL: false
+      SUBDOMAIN_INSTALL: true
       DOMAIN_CURRENT_SITE: localhost:9090
       WP_SITE_TITLE: Municipio
       WP_ADMIN_USER: admin
       WP_ADMIN_PASSWORD: admin
       WP_ADMIN_EMAIL: admin@example.com
+      WP_REDIS_DISABLED: true
       REDIS_HOST: redis
+      FORCE_SSL_ADMIN: false
 
     depends_on:
       - db
@@ -31,7 +32,8 @@ services:
       - "7080:7080"
   
   redis:
-    image: redis:latest
+    # image: redis:latest
+    image: valkey/valkey:9.1.2
     ports:
       - "6379:6379"
 

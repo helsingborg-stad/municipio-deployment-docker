@@ -4,11 +4,11 @@
  * Tell WordPress to be used as network
  */
 
-define('WP_ALLOW_MULTISITE', '(#WP_ALLOW_MULTISITE#)');
+define('WP_ALLOW_MULTISITE', '(#WP_ALLOW_MULTISITE|false#)');
 
 if(defined('WP_ALLOW_MULTISITE') && WP_ALLOW_MULTISITE) {
   define('MULTISITE', true);
-  define('SUBDOMAIN_INSTALL', '(#SUBDOMAIN_INSTALL#)');
+  define('SUBDOMAIN_INSTALL', '(#SUBDOMAIN_INSTALL|false#)');
   define('DOMAIN_CURRENT_SITE', '(#DOMAIN_CURRENT_SITE#)');
   define('PATH_CURRENT_SITE','/');
   define('SITE_ID_CURRENT_SITE', 1 );

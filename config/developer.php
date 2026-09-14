@@ -13,7 +13,9 @@
  * @link https://codex.wordpress.org/Debugging_in_WordPress
  */
 
-// Activate debug mode on all environments using ?debug flag. 
+define('WP_DEBUG', "(#optional:WP_DEBUG#)");
+
+// Activate debug mode on all environments using ?debug flag.
 if(isset($_GET['debug'])) {
   define('WP_DEBUG', true);
 }

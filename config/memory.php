@@ -10,4 +10,4 @@
  *
  */
 
-define('WP_MEMORY_LIMIT', '512M');
+define('WP_MEMORY_LIMIT', "(#WP_MEMORY_LIMIT|512M#)");

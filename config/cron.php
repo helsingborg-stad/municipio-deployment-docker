@@ -11,4 +11,4 @@
  *
  * @var bool
  */
-define('DISABLE_WP_CRON', true);
+define('DISABLE_WP_CRON', "(#DISABLE_WP_CRON|true#)");

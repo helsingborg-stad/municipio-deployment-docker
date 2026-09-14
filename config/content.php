@@ -18,23 +18,23 @@ if($contentHost = isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : false) 
  * Limit number of post revisions per post
  * @var integer
  */
-define('WP_POST_REVISIONS', 10);
+define('WP_POST_REVISIONS', "(#WP_POST_REVISIONS|int:10#)");
 
 /**
  * Set the autosave interval
  * @default: 60 seconds
  * @var integer
  */
-define('AUTOSAVE_INTERVAL', 60);
+define('AUTOSAVE_INTERVAL', "(#AUTOSAVE_INTERVAL|int:60#)");
 
 /**
  * Change the time interval for how often the trash will empty itself
  * @default: 30 days
  * @var integer
  */
-define('EMPTY_TRASH_DAYS', 30);
+define('EMPTY_TRASH_DAYS', "(#EMPTY_TRASH_DAYS|int:30#)");
 
 /**
  * Disable the WordPress theme/plugin editor
  */
-define('DISALLOW_FILE_EDIT', true);
+define('DISALLOW_FILE_EDIT', "(#DISALLOW_FILE_EDIT|true#)");

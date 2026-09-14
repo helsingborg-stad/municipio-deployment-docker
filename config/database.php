@@ -12,13 +12,13 @@ define('DB_USER', '(#DB_USER#)');
 define('DB_PASSWORD', '(#DB_PASSWORD#)');
 
 /** MySQL hostname */
-define('DB_HOST', '(#DB_HOST#)');
+define('DB_HOST', "(#DB_HOST#)");
 
 /** Database Charset to use in creating database tables. */
-define('DB_CHARSET', '(#DB_CHARSET#)');
+define('DB_CHARSET', "(#DB_CHARSET|utf8mb4#)");
 
 /** The Database Collate type. Don't change this if in doubt. */
-define('DB_COLLATE', '(#DB_COLLATE#)');
+define('DB_COLLATE', "(#DB_COLLATE|utf8_general_ci#)");
 
 /**
  * WordPress Database Table prefix.
