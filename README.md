@@ -12,7 +12,7 @@ You need:
 - An ACF Pro license key used to download ACF Pro while building the image
 - A Municipio deployment repository and branch or tag (the defaults use the public Municipio deployment repository and its `main` branch)
 
-Set the ACF Pro key in your shell so it does not need to be written into the Compose file:
+Set the ACF Pro key in your shell. Docker passes it to the build as a temporary BuildKit secret, so it does not need to be written into the Compose file or stored in the image:
 
 ```sh
 export ACF_PRO_KEY="your-license-key"
@@ -29,9 +29,10 @@ services:
     build:
       context: .
       args:
-        ACF_PRO_KEY: ${ACF_PRO_KEY:?Set ACF_PRO_KEY before building}
         MUNICIPIO_DEPLOYMENT_REPOSITORY: https://github.com/municipio-se/municipio-deployment.git
         MUNICIPIO_DEPLOYMENT_REF: main
+      secrets:
+        - acf_pro_key
     environment:
       WP_CONF_DB_NAME: municipio
       WP_CONF_DB_USER: municipio
@@ -72,6 +73,10 @@ services:
 volumes:
   database-data:
   uploads-data:
+
+secrets:
+  acf_pro_key:
+    environment: ACF_PRO_KEY
 ```
 
 The `build.context` must point to this repository because the image is built from its `Dockerfile`, configuration, and setup scripts.
@@ -95,16 +100,17 @@ You can also build the image without Compose:
 
 ```sh
 docker build \
-  --build-arg ACF_PRO_KEY="$ACF_PRO_KEY" \
+  --secret id=acf_pro_key,env=ACF_PRO_KEY \
   --build-arg MUNICIPIO_DEPLOYMENT_REF=main \
   -t municipio:local .
 ```
+
+The `acf_pro_key` secret is required for the build. It is mounted only while Composer installs the dependencies and is not retained in the resulting image.
 
 The available build arguments are:
 
 | Argument | Default | Purpose |
 | --- | --- | --- |
-| `ACF_PRO_KEY` | None | ACF Pro key used during dependency installation. |
 | `MUNICIPIO_DEPLOYMENT_REPOSITORY` | Municipio's public deployment repository | Repository containing `composer.json` and `build.php`. |
 | `MUNICIPIO_DEPLOYMENT_REF` | `main` | Branch or tag to include in the image. |
 

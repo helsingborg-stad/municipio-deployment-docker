@@ -17,12 +17,6 @@ USER root
 # install git
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
-# PHP ini overrides for this dev/debug environment (see php-overrides.ini),
-# copied into the mods-available scan-dir so they load after and override the
-# base image's lsphp config. Filename is prefixed "zz-" so it sorts/loads last.
-COPY --chown=1000:1000 --chmod=644 php-overrides.ini \
-    /usr/local/lsws/lsphp84/etc/php/8.4/mods-available/zz-overrides.ini
-
 # Install WP-CLI
 RUN curl -fsSL -o /usr/local/bin/wp \
     https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
@@ -49,10 +43,10 @@ RUN if [ -n "$MUNICIPIO_DEPLOYMENT_REF" ]; then \
     git clone "$MUNICIPIO_DEPLOYMENT_REPOSITORY" .; \
     fi
 
-ARG ACF_PRO_KEY
-
 # Build the project with Composer and the Municipio build script
-RUN export COMPOSER_AUTH='{"http-basic": {"connect.advancedcustomfields.com": {"username": "'"$ACF_PRO_KEY"'", "password": "http://localhost"}}}' && \
+RUN --mount=type=secret,id=acf_pro_key,required=true \
+    ACF_PRO_KEY="$(cat /run/secrets/acf_pro_key)" && \
+    export COMPOSER_AUTH='{"http-basic": {"connect.advancedcustomfields.com": {"username": "'"$ACF_PRO_KEY"'", "password": "http://localhost"}}}' && \
     composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader --classmap-authoritative && \
     php ./build.php --cleanup --no-composer-in-child-packages --install-npm && \
     chown -R 1000:1000 . && \
