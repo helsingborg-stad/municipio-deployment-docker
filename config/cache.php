@@ -29,6 +29,23 @@ if (!defined('WP_REDIS_HOST') && ($redisHost = env('REDIS_HOST', null)) !== null
 }
 
 /**
+ * Redis connection scheme ("tcp" or "unix"). Set to "unix" together with
+ * WP_REDIS_PATH to connect over a shared socket file instead of TCP.
+ * @var string
+ */
+if (!defined('WP_REDIS_SCHEME') && ($redisScheme = env('REDIS_SCHEME', null)) !== null) {
+    define('WP_REDIS_SCHEME', $redisScheme);
+}
+
+/**
+ * Redis unix socket path, only used when WP_REDIS_SCHEME is "unix".
+ * @var string
+ */
+if (!defined('WP_REDIS_PATH') && ($redisPath = env('REDIS_PATH', null)) !== null) {
+    define('WP_REDIS_PATH', $redisPath);
+}
+
+/**
  * Use memcached.
  * @var bool
  */

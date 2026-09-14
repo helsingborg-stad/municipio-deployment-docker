@@ -21,8 +21,12 @@ services:
       WP_CONF_WP_ADMIN_USER: admin
       WP_CONF_WP_ADMIN_PASSWORD: admin
       WP_CONF_WP_ADMIN_EMAIL: admin@example.com
-      WP_CONF_WP_REDIS_DISABLED: true
+      WP_CONF_WP_REDIS_DISABLED: false
+      # TCP fallback (kept so the redis-cache plugin still works if the socket
+      # is unavailable); WP_REDIS_SCHEME/WP_REDIS_PATH below take priority.
       WP_CONF_REDIS_HOST: redis
+      WP_CONF_REDIS_SCHEME: unix
+      WP_CONF_REDIS_PATH: /var/run/valkey/valkey.sock
       WP_CONF_FORCE_SSL_ADMIN: false
       WP_CONF_EXTRA_MY_CUSTOM_FEATURE: active
 
@@ -31,12 +35,24 @@ services:
     ports:
       - "9090:80"
       - "7080:7080"
+    volumes:
+      - valkey-socket:/var/run/valkey
   
   redis:
     # image: redis:latest
     image: valkey/valkey:9.1.2
+    # unixsocketperm 777: both the municipio (uid 1000) and valkey containers
+    # need read/write access to the socket file; fine for local dev, tighten
+    # (matching uids/gid) before using this pattern anywhere less trusted.
+    command: >
+      valkey-server
+      --port 6379
+      --unixsocket /var/run/valkey/valkey.sock
+      --unixsocketperm 777
     ports:
       - "6379:6379"
+    volumes:
+      - valkey-socket:/var/run/valkey
 
   db:
     image: mariadb:latest
@@ -50,3 +66,4 @@ services:
 
 volumes:
   db-data:
+  valkey-socket:
