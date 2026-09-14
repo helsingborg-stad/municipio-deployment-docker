@@ -10,6 +10,12 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$SCRIPT_DIR/.."
 
 if wp core is-installed --allow-root; then
+    # .htaccess isn't persisted across container restarts/rebuilds, but the
+    # permalink structure and any rewrite rules plugins register (both stored
+    # in the database, which IS persisted via the db-data volume) are. Flush
+    # them back into .htaccess every time the container starts so rewrite
+    # rules generated at runtime survive a restart without needing a mount.
+    wp rewrite flush --hard --allow-root
     exit 0
 fi
 
@@ -57,3 +63,5 @@ if [[ "${ALLOW_MULTISITE}" == "true" ]]; then
 else
     wp core install "${INSTALL_ARGS[@]}"
 fi
+
+wp rewrite flush --hard --allow-root
