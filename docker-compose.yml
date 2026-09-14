@@ -11,13 +11,17 @@ services:
       DB_USER: municipio
       DB_PASSWORD: municipio
       DB_HOST: db
-      WP_SITEURL: http://localhost:9090
-      WP_HOME: http://localhost:9090/wp
+      WP_SITEURL: http://localhost:9090/wp
+      WP_HOME: http://localhost:9090
       DB_CHARSET: utf8mb4
       DB_TABLE_PREFIX: mun_
       WP_ALLOW_MULTISITE: true
       SUBDOMAIN_INSTALL: false
       DOMAIN_CURRENT_SITE: localhost:9090
+      WP_SITE_TITLE: Municipio
+      WP_ADMIN_USER: admin
+      WP_ADMIN_PASSWORD: admin
+      WP_ADMIN_EMAIL: admin@example.com
       REDIS_HOST: redis
 
     depends_on:
