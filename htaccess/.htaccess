@@ -1,0 +1,15 @@
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+
+# WordPress is installed in /wp
+RewriteBase /wp/
+
+# Don't rewrite existing files/directories
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Send everything else to WordPress
+RewriteRule ^(.+)$ /wp/index.php [L]
+</IfModule>
+# END WordPress

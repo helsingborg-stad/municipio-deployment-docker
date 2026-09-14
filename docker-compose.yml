@@ -1,0 +1,45 @@
+services:
+  municipio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - ACF_PRO_KEY=b3JkZXJfaWQ9ODE2NDZ8dHlwZT1kZXZlbG9wZXJ8ZGF0ZT0yMDE2LTA1LTE2IDExOjEyOjQ4
+        - MUNICIPIO_DEPLOYMENT_REF=dockerization
+    environment:
+      DB_NAME: municipio
+      DB_USER: municipio
+      DB_PASSWORD: municipio
+      DB_HOST: db
+      WP_SITEURL: http://localhost:9090
+      WP_HOME: http://localhost:9090/wp
+      DB_CHARSET: utf8mb4
+      DB_TABLE_PREFIX: mun_
+      WP_ALLOW_MULTISITE: true
+      SUBDOMAIN_INSTALL: false
+      DOMAIN_CURRENT_SITE: localhost:9090
+      REDIS_HOST: redis
+
+    depends_on:
+      - db
+    ports:
+      - "9090:80"
+      - "7080:7080"
+  
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+
+  db:
+    image: mariadb:latest
+    environment:
+      MARIADB_DATABASE: municipio
+      MARIADB_USER: municipio
+      MARIADB_PASSWORD: municipio
+      MARIADB_ROOT_PASSWORD: root
+    volumes:  
+      - db-data:/var/lib/mysql
+
+volumes:
+  db-data:
