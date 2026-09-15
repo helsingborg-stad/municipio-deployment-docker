@@ -18,6 +18,7 @@ cd "$SCRIPT_DIR/.."
 # Otherwise use .htaccess
 ALLOW_MULTISITE="${WP_CONF_WP_ALLOW_MULTISITE:-${WP_ALLOW_MULTISITE:-false}}"
 SUBDOMAIN="${WP_CONF_SUBDOMAIN_INSTALL:-${SUBDOMAIN_INSTALL:-false}}"
+ENABLE_LS_CACHE="${WP_CONF_ENABLE_LS_CACHE:-${ENABLE_LS_CACHE:-false}}"
 
 if [[ "$ALLOW_MULTISITE" == "true" ]]; then
     if [[ "$SUBDOMAIN" == "true" ]]; then
@@ -29,4 +30,41 @@ else
     SELECTED_HTACCESS="htaccess/.htaccess"
 fi
 
-cp "$SELECTED_HTACCESS" ".htaccess"
+if [[ "$ENABLE_LS_CACHE" == "true" ]]; then
+    cat << 'EOF' > ".htaccess"
+# BEGIN LSCACHE
+## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
+<IfModule mod_rewrite.c>
+RewriteEngine on
+RewriteRule litespeed/debug/.*\.log$ - [F,L]
+RewriteRule \.litespeed_conf\.dat - [F,L]
+</IfModule>
+<IfModule LiteSpeed>
+CacheLookup on
+RewriteRule .* - [E=Cache-Control:no-autoflush]
+
+### marker ASYNC start ###
+RewriteCond %{REQUEST_URI} /wp-admin/admin-ajax\.php
+RewriteCond %{QUERY_STRING} action=async_litespeed
+RewriteRule .* - [E=noabort:1]
+### marker ASYNC end ###
+
+### marker DROPQS start ###
+CacheKeyModify -qs:fbclid
+CacheKeyModify -qs:gclid
+CacheKeyModify -qs:utm*
+CacheKeyModify -qs:_ga
+### marker DROPQS end ###
+
+</IfModule>
+## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
+# END LSCACHE
+# BEGIN NON_LSCACHE
+## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
+## LITESPEED WP CACHE PLUGIN - Do not edit the contents of this block! ##
+# END NON_LSCACHE
+EOF
+    cat "$SELECTED_HTACCESS" >> ".htaccess"
+else
+    cp "$SELECTED_HTACCESS" ".htaccess"
+fi
