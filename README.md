@@ -2,7 +2,7 @@
 
 This repository builds a ready-to-run [Municipio](https://github.com/municipio-se/municipio-deployment) WordPress image. The image contains OpenLiteSpeed, PHP, WordPress, WP-CLI, Composer, Node.js, and a selected Municipio deployment.
 
-On its first start, the container connects to the database and installs WordPress automatically. Later starts reuse the existing database.
+On its first start, the container connects to the database, installs WordPress, and activates ACF Pro automatically. Later starts reuse the existing database and ensure that ACF Pro remains active.
 
 ## Before you start
 
@@ -150,6 +150,29 @@ environment:
 ```
 
 For a real domain, make sure its DNS and local development setup route subdomains to the Docker host. Subdomain multisite on `localhost` may behave differently between browsers and operating systems.
+
+## Examples
+
+The [`examples/`](examples/) directory contains ready-to-run Compose files that build on the base setup above. They use a relative build context (`..`), so run them from the repository root with `-f`, e.g.:
+
+```sh
+export ACF_PRO_KEY="your-license-key"
+docker-compose -f examples/docker-compose-base.yml up -d --build
+```
+
+Tear an example down, including its volumes, before switching to a different one:
+
+```sh
+docker-compose -f examples/docker-compose-base.yml down -v
+```
+
+| File | Description |
+| --- | --- |
+| `docker-compose-base.yml` | Minimal single-site setup: `municipio` plus a MariaDB `db` service, no cache. |
+| `docker-compose-using-redis.yml` | Adds a Valkey (Redis-compatible) service and activates the `redis-cache` plugin for object caching. |
+| `docker-compose-using-s3.yml` | Adds a MinIO service for S3-compatible media offloading and activates the `s3-uploads`/`s3-local-index` plugins. See the file's comments for the required `S3_UPLOADS_*` constants. |
+| `docker-compose-multisite-subfolder.yml` | Enables WordPress multisite (subfolder mode) and creates a `subsite` site on first start. |
+| `common-services.yml` | Shared `database` and `redis` service definitions, extended by the other examples via `extends`. Not meant to be run on its own. |
 
 ## Useful commands
 
