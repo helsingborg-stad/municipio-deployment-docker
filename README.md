@@ -1,6 +1,6 @@
 # Municipio Docker image
 
-This repository builds a ready-to-run [Municipio](https://github.com/municipio-se/municipio-deployment) WordPress image. The image contains OpenLiteSpeed, PHP, WordPress, WP-CLI, Composer, Node.js, and a selected Municipio deployment.
+This repository builds a ready-to-run [Municipio](https://github.com/municipio-se/municipio-deployment) WordPress image. The image contains OpenLiteSpeed, PHP, WordPress, WP-CLI, and a selected Municipio deployment. Composer, Node.js, npm, and Git are used only while building the image and are not included in the runtime image.
 
 On its first start, the container connects to the database, installs WordPress, and activates ACF Pro automatically. Later starts reuse the existing database and ensure that ACF Pro remains active.
 

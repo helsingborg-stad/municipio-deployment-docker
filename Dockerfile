@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.7
-FROM webbutvecklinghelsingborg/gitops:openlitespeed-0.0.3
+FROM webbutvecklinghelsingborg/gitops:openlitespeed-0.0.3 AS builder
 
 # WP-CLI is baked in here rather than fetched by prepare_wordpress.sh at boot.
 # The entrypoint used to mv it into /usr/bin, which fails the moment the
@@ -7,9 +7,9 @@ FROM webbutvecklinghelsingborg/gitops:openlitespeed-0.0.3
 # because entrypoint-wrapper.sh runs under `set -e`. Installing at build time
 # also drops a network fetch from every pod start.
 #
-# USER root is believed to be a no-op -- the base image's entrypoint already
-# writes to /usr/bin -- but it is the last USER in this file, so it does decide
-# the runtime user. Confirm with:
+# USER root is needed for the build dependencies and is also used by the
+# runtime stage because the base image's entrypoint writes to /usr/bin. Confirm
+# the base image's default with:
 #   docker image inspect webbutvecklinghelsingborg/gitops:openlitespeed-0.0.3 \
 #     --format 'User={{.Config.User}}'
 USER root
@@ -49,8 +49,21 @@ RUN --mount=type=secret,id=acf_pro_key,required=true \
     export COMPOSER_AUTH='{"http-basic": {"connect.advancedcustomfields.com": {"username": "'"$ACF_PRO_KEY"'", "password": "http://localhost"}}}' && \
     composer install --prefer-dist --no-progress --no-suggest --optimize-autoloader --classmap-authoritative && \
     php ./build.php --cleanup --no-composer-in-child-packages --install-npm && \
+    rm -rf .git && \
     chown -R 1000:1000 . && \
     chmod -R 755 .
+# Start from a clean copy of the runtime image so build tools and package
+# manager caches do not become part of the deployed image.
+FROM webbutvecklinghelsingborg/gitops:openlitespeed-0.0.3 AS runtime
+
+USER root
+
+WORKDIR /var/www/vhosts/localhost/html
+
+# WP-CLI is needed by the startup scripts, but Composer, Node.js, npm, and Git
+# are build-only dependencies and stay in the builder stage.
+COPY --from=builder /usr/local/bin/wp /usr/local/bin/wp
+COPY --from=builder --chown=1000:1000 /var/www/vhosts/localhost/html/ ./
 
 # Copy htaccess files
 COPY --chown=1000:1000 --chmod=755 htaccess ./htaccess
@@ -62,7 +75,7 @@ COPY --chown=1000:1000 --chmod=755 config ./config
 COPY --chown=1000:1000 --chmod=755 setup ./setup
 
 # Expose the web server ports
-EXPOSE 80 7080
+EXPOSE 80
 
 # Define a health check for the web server
 HEALTHCHECK CMD test "$(curl -s -o /dev/null -w '%{http_code}' http://localhost/)" = "200"
