@@ -25,10 +25,9 @@ services:
       - db
     ports:
       - "9090:80"
-      - "7080:7080"
 
   db:
-    extends: 
+    extends:
       file: common-services.yml
       service: database
 

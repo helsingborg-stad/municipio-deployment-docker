@@ -30,15 +30,15 @@ services:
       - redis
     ports:
       - "9090:80"
-      - "7080:7080"
+
     volumes:
       - valkey-socket:/var/run/valkey
 
   db:
-    extends: 
+    extends:
       file: common-services.yml
       service: database
-  
+
   redis:
     extends:
       file: common-services.yml
