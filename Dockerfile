@@ -59,7 +59,7 @@ COPY --chown=1000:1000 --chmod=755 htaccess ./htaccess
 COPY --chown=1000:1000 --chmod=755 config ./config
 COPY --chown=1000:1000 --chmod=755 setup ./setup
 
-RUN mkdir -p wp-content/uploads/cache/blade-cache \
+RUN mkdir -p wp-content/uploads/cache/blade-cache && \
     chown 1000:1000 wp-content/uploads/cache/blade-cache
 
 EXPOSE 80
