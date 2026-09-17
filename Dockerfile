@@ -36,7 +36,7 @@ WORKDIR /var/www/vhosts/localhost/html
 
 # Clone the Municipio deployment repository
 ARG MUNICIPIO_DEPLOYMENT_REPOSITORY=https://github.com/municipio-se/municipio-deployment.git
-ARG MUNICIPIO_DEPLOYMENT_REF=main
+ARG MUNICIPIO_DEPLOYMENT_REF=master
 RUN if [ -n "$MUNICIPIO_DEPLOYMENT_REF" ]; then \
     git clone --branch "$MUNICIPIO_DEPLOYMENT_REF" --single-branch "$MUNICIPIO_DEPLOYMENT_REPOSITORY" .; \
     else \
