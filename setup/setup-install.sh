@@ -13,22 +13,7 @@ ALLOW_MULTISITE="${WP_CONF_WP_ALLOW_MULTISITE:-${WP_ALLOW_MULTISITE:-false}}"
 SUBDOMAIN="${WP_CONF_SUBDOMAIN_INSTALL:-${SUBDOMAIN_INSTALL:-false}}"
 ENABLE_LS_CACHE="${WP_CONF_ENABLE_LS_CACHE:-${ENABLE_LS_CACHE:-false}}"
 
-activate_required_plugins() {
-    local activation_args=(--allow-root --skip-plugins --skip-themes)
-
-    if [[ "${ALLOW_MULTISITE}" == "true" ]]; then
-        activation_args+=(--network)
-    fi
-
-    wp plugin activate advanced-custom-fields-pro "${activation_args[@]}"
-
-    if [[ "${ENABLE_LS_CACHE}" == "true" ]]; then
-        wp plugin activate litespeed-cache "${activation_args[@]}"
-    fi
-}
-
 if wp core is-installed --allow-root; then
-    activate_required_plugins
 
     # .htaccess isn't persisted across container restarts/rebuilds, but the
     # permalink structure and any rewrite rules plugins register (both stored
@@ -90,5 +75,4 @@ else
     wp core install "${INSTALL_ARGS[@]}"
 fi
 
-activate_required_plugins
 wp rewrite flush --hard --allow-root
