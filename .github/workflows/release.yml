@@ -55,12 +55,16 @@ jobs:
             type=raw,value=${{ github.event.release.tag_name }}
 
       - name: Build and push image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            "MUNICIPIO_DEPLOYMENT_REF=stage"
+          secrets: |
+            "acf_pro_key=${{ secrets.ACF_PRO_KEY }}"
           cache-from: type=gha
           cache-to: type=gha,mode=max
